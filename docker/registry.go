@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"bitbucket.org/agurinov/dnskek/log"
+	"dnskek/log"
 )
 
 const (

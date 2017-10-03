@@ -7,8 +7,8 @@ import (
 
 	"golang.org/x/net/dns/dnsmessage"
 
-	"bitbucket.org/agurinov/dnskek/docker"
-	"bitbucket.org/agurinov/dnskek/log"
+	"dnskek/docker"
+	"dnskek/log"
 )
 
 type Packet struct {

@@ -4,22 +4,10 @@ services:
         hostname: dnskek
         image: golang
         volumes:
-            - src-vol:/go/src/app
-            - bin-vol:/go/bin
-        # working_dir: /go/src/dnskek
+            - .:/go/src/dnskek
+        working_dir: /go/src/dnskek
         environment:
             # - GOBIN=/go/src/dnskek/dnskek
             - GOOS=darwin
             - GOARCH=amd64
-        command: sh -c "go-wrapper download app"
-volumes:
-    src-vol:
-        driver_opts:
-            type: none
-            device: ${PWD}
-            o: bind
-    bin-vol:
-        driver_opts:
-            type: none
-            device: ${PWD}
-            o: bind
+        command: sh -c "go fmt ...; go-wrapper download; go build -v"

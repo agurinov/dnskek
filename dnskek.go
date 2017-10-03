@@ -12,8 +12,8 @@ import (
 
 	"github.com/urfave/cli"
 
-	"bitbucket.org/agurinov/dnskek/log"
-	"bitbucket.org/agurinov/dnskek/server"
+	"dnskek/log"
+	"dnskek/server"
 )
 
 func main() {
