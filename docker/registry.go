@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"dnskek/log"
+	"github.com/agurinov/dnskek/log"
 )
 
 const (
