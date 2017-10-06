@@ -30,39 +30,39 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "zone",
+			Usage: zoneFlagUsage,
 			Value: "lo",
-			Usage: "DNS zone for local server",
 		},
 		cli.IntFlag{
 			Name:  "port",
+			Usage: portFlagUsage,
 			Value: 5354,
-			Usage: "Port for running DNS server on",
 		},
 		cli.BoolFlag{
 			Name:  "debug",
-			Usage: "Debugging mode",
+			Usage: debugFlagUsage,
 		},
 		cli.IntFlag{
 			Name:  "ttl",
+			Usage: ttlFlagUsage,
 			Value: 300,
-			Usage: "TTL for DNS records",
 		},
 	}
 	app.Commands = []cli.Command{
 		{
 			Name:   "serve",
-			Usage:  "Run DNS server",
-			Action: serveCmd,
+			Usage:  serveActionUsage,
+			Action: serveAction,
 		},
 		{
 			Name:   "install",
-			Usage:  "Prints terminal commands to INSTALL dnskek",
-			Action: installCmd,
+			Usage:  installActionUsage,
+			Action: installAction,
 		},
 		{
 			Name:   "uninstall",
-			Usage:  "Prints terminal commands to UNINSTALL dnskek",
-			Action: uninstallCmd,
+			Usage:  uninstallActionUsage,
+			Action: uninstallAction,
 		},
 	}
 	// configure sorting for help

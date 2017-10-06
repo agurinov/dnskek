@@ -14,7 +14,19 @@ import (
 	"github.com/agurinov/dnskek/server"
 )
 
-func serveCmd(c *cli.Context) {
+var (
+	// Actions
+	serveActionUsage     = "Run DNS server"
+	installActionUsage   = "Prints terminal commands to INSTALL dnskek"
+	uninstallActionUsage = "Prints terminal commands to UNINSTALL dnskek"
+	// Flags
+	zoneFlagUsage  = "DNS zone for local server"
+	portFlagUsage  = "Port for running DNS server on"
+	debugFlagUsage = "Debugging mode"
+	ttlFlagUsage   = "TTL for DNS records. Also, this flag used as ttl of Docker machine registry"
+)
+
+func serveAction(c *cli.Context) {
 	log.SetDebug(c.GlobalBool("debug"))
 	// Phase 1. Create and start server
 	server.New(
@@ -25,7 +37,7 @@ func serveCmd(c *cli.Context) {
 	).Serve()
 }
 
-func installCmd(c *cli.Context) {
+func installAction(c *cli.Context) {
 	log.SetDebug(c.GlobalBool("debug"))
 	// Phase 1. get templates and help templates functions
 	funcMap := template.FuncMap{
@@ -49,7 +61,7 @@ func installCmd(c *cli.Context) {
 	tplChain.ExecuteTemplate(os.Stdout, "install.tpl", data)
 }
 
-func uninstallCmd(c *cli.Context) {
+func uninstallAction(c *cli.Context) {
 	log.SetDebug(c.GlobalBool("debug"))
 	// Phase 1. get templates and help templates functions
 	funcMap := template.FuncMap{
