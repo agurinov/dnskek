@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/exec"
 	"os/user"
 	"runtime"
 	"text/template"
@@ -43,6 +44,7 @@ func installAction(c *cli.Context) {
 	funcMap := template.FuncMap{
 		"executable": os.Executable,
 		"user":       user.Current,
+		"lookup":     exec.LookPath,
 	}
 	tplChain := template.Must(
 		template.New("").Funcs(funcMap).ParseGlob(
@@ -67,6 +69,7 @@ func uninstallAction(c *cli.Context) {
 	funcMap := template.FuncMap{
 		"executable": os.Executable,
 		"user":       user.Current,
+		"lookup":     exec.LookPath,
 	}
 	tplChain := template.Must(
 		template.New("").Funcs(funcMap).ParseGlob(
