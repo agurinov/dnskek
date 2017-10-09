@@ -18,7 +18,7 @@ services:
         volumes:
             - src-vol:/go/src/dnskek
         working_dir: /go/src/dnskek
-        command: sh -c "go-wrapper download; go test ... -v"
+        command: sh -c "go-wrapper download; go test ./... -v"
     fmt:
         hostname: dnskek
         image: golang
