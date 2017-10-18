@@ -25,7 +25,7 @@ services:
         volumes:
             - src-vol:/go/src/dnskek
         working_dir: /go/src/dnskek
-        command: sh -c "go fmt ..."
+        command: sh -c "go fmt ./..."
 volumes:
     src-vol:
         driver_opts:
