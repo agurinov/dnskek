@@ -8,36 +8,38 @@ import (
 
 func TestGetIPByTCPURL(t *testing.T) {
 	if ip := getIPByTCPURL(""); ip != nil {
-		t.Errorf("Expecting %d, got: %d", nil, ip)
+		t.Errorf("Expected nil, got: %v", ip)
 	}
 
 	if ip := getIPByTCPURL("tcp://golang.org"); ip != nil {
-		t.Errorf("Expecting %d, got: %d", nil, ip)
+		t.Errorf("Expected nil, got: %v", ip)
 	}
 
 	if ip := getIPByTCPURL("tcp://192.168.99.101:2376"); ip == nil || !ip.Equal(net.ParseIP("192.168.99.101")) {
-		t.Errorf("Expecting %d, got: %d", net.ParseIP("192.168.99.101"), ip)
+		t.Errorf("Expected 192.168.99.101, got: %v", ip)
 	}
 }
 
 func TestSubdomainRegexExpression(t *testing.T) {
-	validDomains := []string{
-		"foo", "foo-bar",
-		"f-------------------------------------------------------------r", // max length check
-	}
-	for _, d := range validDomains {
-		if matched, _ := regexp.MatchString("^"+subdomainRegexExpression+"$", d); matched == false {
-			t.Errorf("%d is valid domain", d)
-		}
+	p, _ := regexp.Compile("^" + subdomainRegexExpression + "$")
+
+	tableTests := []struct {
+		subDomain string // subdomain for test
+		valid     bool   // is subdomain valid?
+	}{
+		{"foo", true},
+		{"foo-bar", true},
+		{"f-------------------------------------------------------------r", true},
+		{"", false},
+		{"-foo", false},
+		{"foo-bar-", false},
+		{"foo-bar,baz", false},
+		{"f--------------------------------------------------------------r", false},
 	}
 
-	invalidDomains := []string{
-		"", "-foo", "foo-bar-", "foo-bar,baz",
-		"f--------------------------------------------------------------r", // max length check
-	}
-	for _, d := range invalidDomains {
-		if matched, _ := regexp.MatchString("^"+subdomainRegexExpression+"$", d); matched == true {
-			t.Errorf("%d is invalid domain", d)
+	for _, tt := range tableTests {
+		if actual := p.MatchString(tt.subDomain); actual != tt.valid {
+			t.Errorf("Expected %t, got %t", tt.valid, actual)
 		}
 	}
 }
