@@ -7,16 +7,20 @@ import (
 )
 
 func TestGetIPByTCPURL(t *testing.T) {
-	if ip := getIPByTCPURL(""); ip != nil {
-		t.Errorf("Expected nil, got: %v", ip)
+	tableTests := []struct {
+		url        string // url for parsing
+		expectedIP net.IP // expected value of IP
+	}{
+		{"", nil},
+		{"tcp://golang.org", nil},
+		{"http://golang.org", nil},
+		{"tcp://192.168.99.101:2376", net.ParseIP("192.168.99.101")},
 	}
 
-	if ip := getIPByTCPURL("tcp://golang.org"); ip != nil {
-		t.Errorf("Expected nil, got: %v", ip)
-	}
-
-	if ip := getIPByTCPURL("tcp://192.168.99.101:2376"); ip == nil || !ip.Equal(net.ParseIP("192.168.99.101")) {
-		t.Errorf("Expected 192.168.99.101, got: %v", ip)
+	for _, tt := range tableTests {
+		if ip := getIPByTCPURL(tt.url); !ip.Equal(tt.expectedIP) {
+			t.Errorf("Expected %s, got %s", tt.expectedIP, ip)
+		}
 	}
 }
 
