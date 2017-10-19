@@ -47,3 +47,21 @@ func TestSubdomainRegexExpression(t *testing.T) {
 		}
 	}
 }
+
+func TestSubdomainsRegexExpression(t *testing.T) {
+	p, _ := regexp.Compile("^" + subdomainsRegexExpression + "$")
+
+	tableTests := []struct {
+		subDomains string // subdomain group for test
+		valid      bool   // is subdomain valid?
+	}{
+		{"foo.bar.baz.", true},
+		{"foo..bar.", false},
+	}
+
+	for _, tt := range tableTests {
+		if actual := p.MatchString(tt.subDomains); actual != tt.valid {
+			t.Errorf("Expected %t, got %t", tt.valid, actual)
+		}
+	}
+}
