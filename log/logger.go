@@ -24,7 +24,7 @@ func (ms Modifications) String() string {
 }
 
 const (
-	// Common attributes
+	// Common attributes [0, 1, 2, 4, 5, 7]
 	Default Modification = iota
 	Bold
 	SemiBright
