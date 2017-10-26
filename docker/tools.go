@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	subdomainRegexExpression  = "[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"                    //each DNS label can contain up to 63 characters
+	subdomainRegexExpression  = "[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"              //each DNS label can contain up to 63 characters
 	subdomainsRegexExpression = fmt.Sprintf("(?:%s[.])+", subdomainRegexExpression) // subdivision can go down to 127 levels deep
 )
 

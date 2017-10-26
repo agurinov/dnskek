@@ -19,7 +19,7 @@ func TestGetIPByTCPURL(t *testing.T) {
 
 	for _, tt := range tableTests {
 		if ip := getIPByTCPURL(tt.url); !ip.Equal(tt.expectedIP) {
-			t.Errorf("Expected `%s`, got `%s`", tt.expectedIP, ip)
+			t.Errorf("Expected %q, got %q", tt.expectedIP, ip)
 		}
 	}
 }
@@ -43,7 +43,7 @@ func TestSubdomainRegexExpression(t *testing.T) {
 
 	for _, tt := range tableTests {
 		if actual := p.MatchString(tt.subDomain); actual != tt.valid {
-			t.Errorf("Expected `%t`, got `%t`", tt.valid, actual)
+			t.Errorf("Expected \"%t\", got \"%t\"", tt.valid, actual)
 		}
 	}
 }
@@ -61,7 +61,7 @@ func TestSubdomainsRegexExpression(t *testing.T) {
 
 	for _, tt := range tableTests {
 		if actual := p.MatchString(tt.subDomains); actual != tt.valid {
-			t.Errorf("Expected `%t`, got `%t`", tt.valid, actual)
+			t.Errorf("Expected \"%t\", got \"%t\"", tt.valid, actual)
 		}
 	}
 }
