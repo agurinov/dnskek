@@ -1,8 +1,17 @@
 package log
 
 import (
+	"bytes"
+	golog "log"
 	"testing"
 )
+
+var bufOut, bufErr bytes.Buffer
+var testLogger = &Logger{
+	out:   golog.New(&bufOut, "", 0), // nil flag for empty datetime prefix
+	err:   golog.New(&bufErr, "", 0),
+	debug: false,
+}
 
 func TestModificationsString(t *testing.T) {
 	tableTests := []struct {
@@ -24,7 +33,7 @@ func TestModificationsString(t *testing.T) {
 func TestWrap(t *testing.T) {
 	tableTests := []struct {
 		s       string        // string to wrap
-		ms      Modifications //modifications
+		ms      Modifications // modifications
 		wrapped string        // wrapped
 	}{
 		{"foo", nil, "foo"}, // no modifactions
@@ -53,5 +62,30 @@ func TestWrapShortcuts(t *testing.T) {
 		if tt.shortcut != tt.expected {
 			t.Errorf("Expected %q, got %q", tt.expected, tt.shortcut)
 		}
+	}
+}
+
+func TestSetDebug(t *testing.T) {
+	for _, debug := range []bool{true, false} {
+		if testLogger.SetDebug(debug); testLogger.debug != debug {
+			t.Errorf("Expected \"%t\", got \"%t\"", debug, testLogger.debug)
+		}
+	}
+}
+
+func TestError(t *testing.T) {
+	defer bufOut.Reset() // reset stdout buffer after test
+	defer bufErr.Reset() // reset stderr buffer after test
+	// write err
+	testLogger.Error("errorcode:100500")
+	// check io.Writer of Logger
+	// error goes to .err writer
+	expectedOutput := "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"
+	if bufErrContent := bufErr.String(); bufErrContent != expectedOutput {
+		t.Errorf("Expected %q, got %q", expectedOutput, bufErrContent)
+	}
+	// .out writer must be still empty
+	if bufOutContent := bufOut.String(); bufOutContent != "" {
+		t.Errorf("Expected %q, got %q", "", bufOutContent)
 	}
 }
