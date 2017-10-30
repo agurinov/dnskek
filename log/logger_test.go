@@ -89,3 +89,20 @@ func TestError(t *testing.T) {
 		t.Errorf("Expected %q, got %q", "", bufOutContent)
 	}
 }
+
+func TestErrorf(t *testing.T) {
+	defer bufOut.Reset() // reset stdout buffer after test
+	defer bufErr.Reset() // reset stderr buffer after test
+	// write err
+	testLogger.Errorf("FOO%s:%dBAR", "errorcode", 100500)
+	// check io.Writer of Logger
+	// error goes to .err writer
+	expectedOutput := "\x1b[1;31;5m[ERROR]\x1b[0m\tFOOerrorcode:100500BAR\n"
+	if bufErrContent := bufErr.String(); bufErrContent != expectedOutput {
+		t.Errorf("Expected %q, got %q", expectedOutput, bufErrContent)
+	}
+	// .out writer must be still empty
+	if bufOutContent := bufOut.String(); bufOutContent != "" {
+		t.Errorf("Expected %q, got %q", "", bufOutContent)
+	}
+}
