@@ -2,6 +2,7 @@ package log
 
 import (
 	"bytes"
+    "reflect"
 	golog "log"
 	"testing"
 )
@@ -30,6 +31,7 @@ func TestModificationsString(t *testing.T) {
 	}
 }
 
+// look to join this and next func
 func TestWrap(t *testing.T) {
 	tableTests := []struct {
 		s       string        // string to wrap
@@ -73,6 +75,30 @@ func TestSetDebug(t *testing.T) {
 	}
 }
 
+func TestLoggerPrint(t *testing.T) {
+	tableTests := []struct {
+		method         string        // logger method
+		args           []interface{} // args to logger method
+		expectedBuffer bytes.Buffer  // logger's buffer to print
+		expectedOutput string        // expected buffer's output
+	}{
+		{"Error", []interface{}{"errorcode:100500"}, bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"},
+	}
+
+	for _, tt := range tableTests {
+        method := reflect.ValueOf(testLogger).MethodByName(tt.method)
+        method(tt.args...)
+
+        // if bufContent := tt.expectedBuffer.String(); bufContent != tt.expectedOutput {
+    	// 	t.Errorf("Expected %q, got %q", tt.expectedOutput, bufContent)
+    	// }
+
+        // tt.expectedBuffer.Reset()
+	}
+}
+
+// All above
+// https://stackoverflow.com/questions/8103617/call-a-struct-and-its-method-by-name-in-go
 func TestError(t *testing.T) {
 	defer bufOut.Reset() // reset stdout buffer after test
 	defer bufErr.Reset() // reset stderr buffer after test
