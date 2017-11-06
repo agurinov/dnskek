@@ -6,6 +6,8 @@ branches:
 
 go:
     - 1.9.x
+os:
+    - osx
 
 install:
     - go get -v -d -t
@@ -13,5 +15,3 @@ before_script:
     - go test ./... -v -cover
 script:
     go install -v
-deploy:
-    true
