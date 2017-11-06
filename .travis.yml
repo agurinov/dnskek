@@ -6,10 +6,14 @@ branches:
 
 go:
     - 1.9.x
-    - master
+os:
+    - osx
 
 install:
     - go get -v -d -t
-
-script:
+before_script:
     - go test ./... -v -cover
+script:
+    go install -v
+deploy:
+    true
