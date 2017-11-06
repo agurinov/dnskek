@@ -76,23 +76,33 @@ func TestSetDebug(t *testing.T) {
 }
 
 func TestLoggerPrint(t *testing.T) {
-	tableTests := []struct {
+	type tableTest struct {
 		methodName     string        // logger method
 		args           []interface{} // args to logger method
+		debug          bool          // logger printer debug mode
 		expectedBuffer *bytes.Buffer // logger's buffer to print
 		expectedOutput string        // expected buffer's output
-	}{
-		{"Error", []interface{}{"errorcode:100500"}, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"},
-		{"Errorf", []interface{}{"FOO%s:%dBAR", "errorcode", 100500}, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\tFOOerrorcode:100500BAR\n"},
+	}
+	tableTests := []tableTest{
+		{"Error", []interface{}{"errorcode:100500"}, false, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"},
+		{"Errorf", []interface{}{"FOO%s:%dBAR", "errorcode", 100500}, false, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\tFOOerrorcode:100500BAR\n"},
 
-		{"Info", []interface{}{"infocode:100500"}, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tinfocode:100500\n"},
-		{"Infof", []interface{}{"FOO%s:%dBAR", "infocode", 100500}, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tFOOinfocode:100500BAR\n"},
+		{"Info", []interface{}{"infocode:100500"}, false, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tinfocode:100500\n"},
+		{"Infof", []interface{}{"FOO%s:%dBAR", "infocode", 100500}, false, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tFOOinfocode:100500BAR\n"},
 
-		{"Warn", []interface{}{"warncode:100500"}, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\twarncode:100500\n"},
-		{"Warnf", []interface{}{"FOO%s:%dBAR", "warncode", 100500}, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\tFOOwarncode:100500BAR\n"},
+		{"Warn", []interface{}{"warncode:100500"}, false, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\twarncode:100500\n"},
+		{"Warnf", []interface{}{"FOO%s:%dBAR", "warncode", 100500}, false, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\tFOOwarncode:100500BAR\n"},
+
+		{"Debug", []interface{}{"debugcode:100500"}, false, &bufErr, ""},
+		{"Debugf", []interface{}{"FOO%s:%dBAR", "debugcode", 100500}, false, &bufErr, ""},
+
+		{"Debug", []interface{}{"debugcode:100500"}, true, &bufErr, "\x1b[1;37m[DEBUG]\x1b[0m\tdebugcode:100500\n"},
+		{"Debugf", []interface{}{"FOO%s:%dBAR", "debugcode", 100500}, true, &bufErr, "\x1b[1;37m[DEBUG]\x1b[0m\tFOOdebugcode:100500BAR\n"},
 	}
 
 	for _, tt := range tableTests {
+		// set mode
+		testLogger.SetDebug(tt.debug)
 		// prepare and convert to reflect
 		method := reflect.ValueOf(testLogger).MethodByName(tt.methodName)
 		args := []reflect.Value{}
