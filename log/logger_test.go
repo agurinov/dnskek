@@ -2,8 +2,8 @@ package log
 
 import (
 	"bytes"
-    "reflect"
 	golog "log"
+	"reflect"
 	"testing"
 )
 
@@ -77,58 +77,35 @@ func TestSetDebug(t *testing.T) {
 
 func TestLoggerPrint(t *testing.T) {
 	tableTests := []struct {
-		method         string        // logger method
+		methodName     string        // logger method
 		args           []interface{} // args to logger method
-		expectedBuffer bytes.Buffer  // logger's buffer to print
+		expectedBuffer *bytes.Buffer // logger's buffer to print
 		expectedOutput string        // expected buffer's output
 	}{
-		{"Error", []interface{}{"errorcode:100500"}, bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"},
+		{"Error", []interface{}{"errorcode:100500"}, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"},
+		{"Errorf", []interface{}{"FOO%s:%dBAR", "errorcode", 100500}, &bufErr, "\x1b[1;31;5m[ERROR]\x1b[0m\tFOOerrorcode:100500BAR\n"},
+
+		{"Info", []interface{}{"infocode:100500"}, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tinfocode:100500\n"},
+		{"Infof", []interface{}{"FOO%s:%dBAR", "infocode", 100500}, &bufOut, "\x1b[1;32m[INFO]\x1b[0m\tFOOinfocode:100500BAR\n"},
+
+		{"Warn", []interface{}{"warncode:100500"}, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\twarncode:100500\n"},
+		{"Warnf", []interface{}{"FOO%s:%dBAR", "warncode", 100500}, &bufErr, "\x1b[1;33;5m[WARN]\x1b[0m\tFOOwarncode:100500BAR\n"},
 	}
 
 	for _, tt := range tableTests {
-        method := reflect.ValueOf(testLogger).MethodByName(tt.method)
-        method(tt.args...)
-
-        // if bufContent := tt.expectedBuffer.String(); bufContent != tt.expectedOutput {
-    	// 	t.Errorf("Expected %q, got %q", tt.expectedOutput, bufContent)
-    	// }
-
-        // tt.expectedBuffer.Reset()
-	}
-}
-
-// All above
-// https://stackoverflow.com/questions/8103617/call-a-struct-and-its-method-by-name-in-go
-func TestError(t *testing.T) {
-	defer bufOut.Reset() // reset stdout buffer after test
-	defer bufErr.Reset() // reset stderr buffer after test
-	// write err
-	testLogger.Error("errorcode:100500")
-	// check io.Writer of Logger
-	// error goes to .err writer
-	expectedOutput := "\x1b[1;31;5m[ERROR]\x1b[0m\terrorcode:100500\n"
-	if bufErrContent := bufErr.String(); bufErrContent != expectedOutput {
-		t.Errorf("Expected %q, got %q", expectedOutput, bufErrContent)
-	}
-	// .out writer must be still empty
-	if bufOutContent := bufOut.String(); bufOutContent != "" {
-		t.Errorf("Expected %q, got %q", "", bufOutContent)
-	}
-}
-
-func TestErrorf(t *testing.T) {
-	defer bufOut.Reset() // reset stdout buffer after test
-	defer bufErr.Reset() // reset stderr buffer after test
-	// write err
-	testLogger.Errorf("FOO%s:%dBAR", "errorcode", 100500)
-	// check io.Writer of Logger
-	// error goes to .err writer
-	expectedOutput := "\x1b[1;31;5m[ERROR]\x1b[0m\tFOOerrorcode:100500BAR\n"
-	if bufErrContent := bufErr.String(); bufErrContent != expectedOutput {
-		t.Errorf("Expected %q, got %q", expectedOutput, bufErrContent)
-	}
-	// .out writer must be still empty
-	if bufOutContent := bufOut.String(); bufOutContent != "" {
-		t.Errorf("Expected %q, got %q", "", bufOutContent)
+		// prepare and convert to reflect
+		method := reflect.ValueOf(testLogger).MethodByName(tt.methodName)
+		args := []reflect.Value{}
+		for _, a := range tt.args {
+			args = append(args, reflect.ValueOf(a))
+		}
+		// call Logger print method
+		method.Call(args)
+		// Check buffer output
+		if bufContent := tt.expectedBuffer.String(); bufContent != tt.expectedOutput {
+			t.Errorf("Expected %q, got %q", tt.expectedOutput, bufContent)
+		}
+		// reset buffer to future tests
+		tt.expectedBuffer.Reset()
 	}
 }
