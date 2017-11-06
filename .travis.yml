@@ -1,0 +1,15 @@
+language: go
+
+branches:
+    only:
+        - master
+
+go:
+    - 1.9.x
+    - master
+
+install:
+    - go get -v -d -t
+
+script:
+    - go test ./... -v -cover
