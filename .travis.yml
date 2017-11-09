@@ -22,7 +22,7 @@ install:
 before_script:
     - go test ./... -v -cover
 #     - goveralls -service=travis-ci
-# # script:
-#     # go install -v
+script:
+    - go install -v
 # after_success:
 #     - coveralls
