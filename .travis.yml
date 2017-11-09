@@ -1,3 +1,4 @@
+sudo: false
 language: go
 
 branches:
@@ -5,11 +6,23 @@ branches:
         - master
 
 go:
-    - 1.9.x
+    - 1.9
+
+env:
+    matrix:
+        - GOOS=linux GOARCH=amd64
+        - GOOS=darwin GOARCH=amd64
+        - GOOS=windows GOARCH=amd64
+        - GOOS=linux GOARCH=arm
+        - GOOS=linux GOARCH=arm64
 
 install:
+#     - go get github.com/mattn/goveralls
     - go get -v -d -t
 before_script:
     - go test ./... -v -cover
-script:
-    go install -v
+#     - goveralls -service=travis-ci
+# # script:
+#     # go install -v
+# after_success:
+#     - coveralls

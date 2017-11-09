@@ -59,7 +59,7 @@ func (reg *Registry) fill() {
 		dm := newMachine(machine_data[0], machine_data[1], machine_data[2], machine_data[3], machine_data[4])
 		// register machine
 		reg.items = append(reg.items, dm)
-		defer log.Debugf("Registry.fill.Machine(name=\"%s\") -> %s", dm.Name, successLogStatus)
+		defer log.Debugf("Registry.fill.Machine(name=%q) -> %s", dm.Name, successLogStatus)
 	}
 }
 
@@ -79,7 +79,7 @@ func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
 		// } else {
 		//     status := successLogStatus
 		// }
-		log.Debugf("Registry.ResolveMachineByName(name=\"%s\") -> %s", name, successLogStatus)
+		log.Debugf("Registry.ResolveMachineByName(name=%q) -> %s", name, successLogStatus)
 	}()
 	// iterate over registry
 	for _, dm := range reg.items {

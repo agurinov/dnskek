@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+    "strings"
 )
 
 var (
@@ -18,4 +19,15 @@ func getIPByTCPURL(URL string) net.IP {
 	}
 	// some errors occured -> cannot get IP
 	return nil
+}
+
+func getMachinesByRaw(raw string) (machines []*Machine) {
+    for _, row := range strings.Split(raw, "\n") {
+		bits := strings.Split(row, "|")
+		// parse data and get machine struct
+		dm := newMachine(bits[0], bits[1], bits[2], bits[3], bits[4])
+		// register machine
+		machines = append(machines, dm)
+	}
+    return
 }

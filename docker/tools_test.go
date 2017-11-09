@@ -65,3 +65,22 @@ func TestSubdomainsRegexExpression(t *testing.T) {
 		}
 	}
 }
+
+// func TestGetMachinesByRaw(t *testing.T) {
+//     // TODO look at tableTests
+//     raw := `intranet.lo|virtualbox|Running|tcp://192.168.99.101:2376|v17.06.0-ce
+// jetsmarter4.lo|virtualbox|Running|tcp://192.168.99.102:2376|v17.05.0-ce
+// jetsmarter.lo|virtualbox|Running|tcp://192.168.99.100:2376|v17.05.0-ce
+// ttt|virtualbox|Running|tcp://192.168.99.103:2376|v17.10.0-ce
+// yomods.lo|virtualbox|Stopped||Unknown`
+//
+//
+//     t.Log("========================================")
+//     ms := getMachinesByRaw(raw)
+//     t.Log(ms)
+//     t.Log("========================================")
+//
+//     for _, dm := range ms {
+//         t.Log(dm.Name, dm.DriverName, )
+//     }
+// }
