@@ -8,13 +8,13 @@ branches:
 go:
     - 1.9
 
-env:
-    matrix:
-        - GOOS=linux GOARCH=amd64
-        - GOOS=darwin GOARCH=amd64
-        - GOOS=windows GOARCH=amd64
-        - GOOS=linux GOARCH=arm
-        - GOOS=linux GOARCH=arm64
+# env:
+#     matrix:
+#         - GOOS=linux GOARCH=amd64
+#         - GOOS=darwin GOARCH=amd64
+#         - GOOS=windows GOARCH=amd64
+#         - GOOS=linux GOARCH=arm
+#         - GOOS=linux GOARCH=arm64
 
 install:
     # for cross-compiling
@@ -22,7 +22,11 @@ install:
 #     - go get github.com/mattn/goveralls
     - go get -v -d -t
 before_script:
-    - go test ./... -v -cover
+    - GOOS=linux GOARCH=amd64 go test ./... -v -cover
+    - GOOS=darwin GOARCH=amd64 go test ./... -v -cover
+    - GOOS=windows GOARCH=amd64 go test ./... -v -cover
+    - GOOS=linux GOARCH=arm go test ./... -v -cover
+    - GOOS=linux GOARCH=arm64 go test ./... -v -cover
 #     - goveralls -service=travis-ci
 script:
     - gox -output "dist/dnskek-{{.OS}}-{{.Arch}}"
