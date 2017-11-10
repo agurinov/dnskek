@@ -23,7 +23,7 @@ before_script:
     - go test ./... -v -cover
 #     - goveralls -service=travis-ci
 script:
-    - go build -v -output "dnskek-${GOOS}-${GOARCH}"
+    - go build -v -o "dnskek-${GOOS}-${GOARCH}"
     - ls -la
 # deploy:
 #     provider: releases
