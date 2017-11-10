@@ -8,6 +8,26 @@ branches:
 go:
     - 1.9
 
+jobs:
+    include:
+        - stage: Install
+            script: go get github.com/mitchellh/gox
+            script: go get -v -d -t
+        - stage: Testing
+            script: - GOOS=linux GOARCH=amd64 go test ./... -v -cover
+            script: - GOOS=darwin GOARCH=amd64 go test ./... -v -cover
+            script: - GOOS=windows GOARCH=amd64 go test ./... -v -cover
+            script: - GOOS=linux GOARCH=arm go test ./... -v -cover
+            script: - GOOS=linux GOARCH=arm64 go test ./... -v -cover
+        - stage: GitHub Release
+            script: echo "Deploying to GitHub releases ..."
+            # deploy:
+            #     provider: releases
+            #     api_key: $GITHUB_OAUTH_TOKEN
+            #     skip_cleanup: true
+            #     on:
+            #         tags: true
+
 # env:
 #     matrix:
 #         - GOOS=linux GOARCH=amd64
@@ -16,21 +36,21 @@ go:
 #         - GOOS=linux GOARCH=arm
 #         - GOOS=linux GOARCH=arm64
 
-install:
-    # for cross-compiling
-    - go get github.com/mitchellh/gox
-#     - go get github.com/mattn/goveralls
-    - go get -v -d -t
-before_script:
-    - GOOS=linux GOARCH=amd64 go test ./... -v -cover
-    - GOOS=darwin GOARCH=amd64 go test ./... -v -cover
-    - GOOS=windows GOARCH=amd64 go test ./... -v -cover
-    - GOOS=linux GOARCH=arm go test ./... -v -cover
-    - GOOS=linux GOARCH=arm64 go test ./... -v -cover
-#     - goveralls -service=travis-ci
-script:
-    - gox -output "dist/dnskek-{{.OS}}-{{.Arch}}"
-    - ls -la ./dist
+# install:
+#     # for cross-compiling
+#     - go get github.com/mitchellh/gox
+# #     - go get github.com/mattn/goveralls
+#     - go get -v -d -t
+# before_script:
+#     - GOOS=linux GOARCH=amd64 go test ./... -v -cover
+#     - GOOS=darwin GOARCH=amd64 go test ./... -v -cover
+#     - GOOS=windows GOARCH=amd64 go test ./... -v -cover
+#     - GOOS=linux GOARCH=arm go test ./... -v -cover
+#     - GOOS=linux GOARCH=arm64 go test ./... -v -cover
+# #     - goveralls -service=travis-ci
+# script:
+#     - gox -output "dist/dnskek-{{.OS}}-{{.Arch}}"
+#     - ls -la ./dist
 # after_success:
 #     - coveralls
 # deploy:
