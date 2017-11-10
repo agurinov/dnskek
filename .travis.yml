@@ -17,12 +17,23 @@ env:
         - GOOS=linux GOARCH=arm64
 
 install:
+    # for cross-compiling
+    - go get github.com/mitchellh/gox
 #     - go get github.com/mattn/goveralls
     - go get -v -d -t
 before_script:
     - go test ./... -v -cover
 #     - goveralls -service=travis-ci
 script:
-    - go install -v
+    - gox -output "dist/dnskek-{{.OS}}-{{.Arch}}"
+    - ls -la ./dist
 # after_success:
 #     - coveralls
+# deploy:
+#     provider: releases
+#     api_key: "GITHUB OAUTH TOKEN"
+#     file_glob: true
+#     file: dist/*
+#     skip_cleanup: true
+#     on:
+#         tags: true
