@@ -25,6 +25,10 @@ jobs:
         - stage: deploy
           script: echo "DEPLOY"
 
+notifications:
+    webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+
+
 
 #
 # install:
