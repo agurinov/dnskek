@@ -20,6 +20,8 @@ jobs:
     include:
         - stage: test
           script: echo "TEST 1"
+        - stage: build
+          script: echo "BUILD"
         - stage: deploy
           script: echo "DEPLOY"
 
