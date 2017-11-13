@@ -8,23 +8,32 @@ branches:
 go:
     - 1.9
 
-env:
-    matrix:
-        - GOOS=linux GOARCH=amd64
-        - GOOS=darwin GOARCH=amd64
-        - GOOS=windows GOARCH=amd64
-        - GOOS=linux GOARCH=arm
-        - GOOS=linux GOARCH=arm64
+jobs:
+    include:
+        - stage: test
+            script: echo "TEST 1"
+        - # stage name not required, will continue to use `test`
+            script: echo "TEST 2"
+        - stage: deploy
+            script: echo "DEPLOY"
 
-install:
-#     - go get github.com/mattn/goveralls
-    - go get -v -d -t
-before_script:
-    - go test ./... -v -cover
-#     - goveralls -service=travis-ci
-script:
-    - go build -v -o "dnskek-${GOOS}-${GOARCH}"
-    - ls -la
+# env:
+#     matrix:
+#         - GOOS=linux GOARCH=amd64
+#         - GOOS=darwin GOARCH=amd64
+#         - GOOS=windows GOARCH=amd64
+#         - GOOS=linux GOARCH=arm
+#         - GOOS=linux GOARCH=arm64
+#
+# install:
+# #     - go get github.com/mattn/goveralls
+#     - go get -v -d -t
+# before_script:
+#     - go test ./... -v -cover
+# #     - goveralls -service=travis-ci
+# script:
+#     - go build -v -o "dnskek-${GOOS}-${GOARCH}"
+#     - ls -la
 # deploy:
 #     provider: releases
 #     api_key: "GITHUB OAUTH TOKEN"
