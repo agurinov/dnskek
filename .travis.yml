@@ -11,11 +11,9 @@ go:
 jobs:
     include:
         - stage: test
-            script: echo "TEST 1"
-        - # stage name not required, will continue to use `test`
-            script: echo "TEST 2"
+          script: echo "TEST 1"
         - stage: deploy
-            script: echo "DEPLOY"
+          script: echo "DEPLOY"
 
 # env:
 #     matrix:
