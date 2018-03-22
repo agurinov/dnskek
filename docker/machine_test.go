@@ -22,24 +22,41 @@ func TestNewMachine(t *testing.T) {
 		"tcp://192.168.99.110:2376",
 		"17.0.0.3",
 	)
-	if machine.Name != dm.Name {
-		t.Errorf("Expected %q, got %q", dm.Name, machine.Name)
-	}
-	if machine.DriverName != dm.DriverName {
-		t.Errorf("Expected %q, got %q", dm.DriverName, machine.DriverName)
-	}
-	if machine.State != dm.State {
-		t.Errorf("Expected %q, got %q", dm.State, machine.State)
-	}
-	if machine.URL != dm.URL {
-		t.Errorf("Expected %q, got %q", dm.URL, machine.URL)
-	}
-	if machine.DockerVersion != dm.DockerVersion {
-		t.Errorf("Expected %q, got %q", dm.DockerVersion, machine.DockerVersion)
-	}
-	if !machine.IP.Equal(dm.IP) {
-		t.Errorf("Expected %q, got %q", dm.IP, machine.IP)
-	}
+	t.Run("Name", func(t *testing.T) {
+		if machine.Name != dm.Name {
+			t.Errorf("Expected %q, got %q", dm.Name, machine.Name)
+		}
+	})
+
+	t.Run("DriverName", func(t *testing.T) {
+		if machine.DriverName != dm.DriverName {
+			t.Errorf("Expected %q, got %q", dm.DriverName, machine.DriverName)
+		}
+	})
+
+	t.Run("State", func(t *testing.T) {
+		if machine.State != dm.State {
+			t.Errorf("Expected %q, got %q", dm.State, machine.State)
+		}
+	})
+
+	t.Run("URL", func(t *testing.T) {
+		if machine.URL != dm.URL {
+			t.Errorf("Expected %q, got %q", dm.URL, machine.URL)
+		}
+	})
+
+	t.Run("DockerVersion", func(t *testing.T) {
+		if machine.DockerVersion != dm.DockerVersion {
+			t.Errorf("Expected %q, got %q", dm.DockerVersion, machine.DockerVersion)
+		}
+	})
+
+	t.Run("IP", func(t *testing.T) {
+		if !machine.IP.Equal(dm.IP) {
+			t.Errorf("Expected %q, got %q", dm.IP, machine.IP)
+		}
+	})
 }
 
 func TestDnsIP4(t *testing.T) {
