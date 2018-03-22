@@ -2,6 +2,7 @@ package log
 
 import (
 	"bytes"
+	"fmt"
 	golog "log"
 	"reflect"
 	"testing"
@@ -24,10 +25,12 @@ func TestModificationsString(t *testing.T) {
 		{Modifications{Bold, SemiBright, RedChar, RedBackground}, "\x1b[1;2;31;41m"}, // some set via variables
 	}
 
-	for _, tt := range tableTests {
-		if msString := tt.ms.String(); msString != tt.expectedString {
-			t.Errorf("Expected %q, got %q", tt.expectedString, msString)
-		}
+	for i, tt := range tableTests {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			if msString := tt.ms.String(); msString != tt.expectedString {
+				t.Errorf("Expected %q, got %q", tt.expectedString, msString)
+			}
+		})
 	}
 }
 
@@ -42,10 +45,12 @@ func TestWrap(t *testing.T) {
 		{"bar", Modifications{Bold, AquamarineChar, Blink, YellowBackground}, "\x1b[1;36;5;43mbar\x1b[0m"}, // some set of mods
 	}
 
-	for _, tt := range tableTests {
-		if wrapped := Wrap(tt.s, tt.ms...); wrapped != tt.wrapped {
-			t.Errorf("Expected %q, got %q", tt.wrapped, wrapped)
-		}
+	for i, tt := range tableTests {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			if wrapped := Wrap(tt.s, tt.ms...); wrapped != tt.wrapped {
+				t.Errorf("Expected %q, got %q", tt.wrapped, wrapped)
+			}
+		})
 	}
 }
 
@@ -60,18 +65,22 @@ func TestWrapShortcuts(t *testing.T) {
 		{warningPrefix, "\x1b[1;33;5m[WARN]\x1b[0m\t"},
 	}
 
-	for _, tt := range tableTests {
-		if tt.shortcut != tt.expected {
-			t.Errorf("Expected %q, got %q", tt.expected, tt.shortcut)
-		}
+	for i, tt := range tableTests {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			if tt.shortcut != tt.expected {
+				t.Errorf("Expected %q, got %q", tt.expected, tt.shortcut)
+			}
+		})
 	}
 }
 
 func TestSetDebug(t *testing.T) {
-	for _, debug := range []bool{true, false} {
-		if testLogger.SetDebug(debug); testLogger.debug != debug {
-			t.Errorf("Expected \"%t\", got \"%t\"", debug, testLogger.debug)
-		}
+	for i, debug := range []bool{true, false} {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			if testLogger.SetDebug(debug); testLogger.debug != debug {
+				t.Errorf("Expected \"%t\", got \"%t\"", debug, testLogger.debug)
+			}
+		})
 	}
 }
 
@@ -100,7 +109,7 @@ func TestLoggerPrint(t *testing.T) {
 		{"Debugf", []interface{}{"FOO%s:%dBAR", "debugcode", 100500}, true, &bufErr, "\x1b[1;37m[DEBUG]\x1b[0m\tFOOdebugcode:100500BAR\n"},
 	}
 
-	for _, tt := range tableTests {
+	for i, tt := range tableTests {
 		// set mode
 		testLogger.SetDebug(tt.debug)
 		// prepare and convert to reflect
@@ -112,9 +121,11 @@ func TestLoggerPrint(t *testing.T) {
 		// call Logger print method
 		method.Call(args)
 		// Check buffer output
-		if bufContent := tt.expectedBuffer.String(); bufContent != tt.expectedOutput {
-			t.Errorf("Expected %q, got %q", tt.expectedOutput, bufContent)
-		}
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			if bufContent := tt.expectedBuffer.String(); bufContent != tt.expectedOutput {
+				t.Errorf("Expected %q, got %q", tt.expectedOutput, bufContent)
+			}
+		})
 		// reset buffer to future tests
 		tt.expectedBuffer.Reset()
 	}

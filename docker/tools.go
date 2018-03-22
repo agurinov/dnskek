@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/url"
-    "strings"
+	"strings"
 )
 
 var (
@@ -22,12 +22,28 @@ func getIPByTCPURL(URL string) net.IP {
 }
 
 func getMachinesByRaw(raw string) (machines []*Machine) {
-    for _, row := range strings.Split(raw, "\n") {
-		bits := strings.Split(row, "|")
+	if raw == "" {
+		// empty string will split into slice with len == 1
+		// no need this case
+		return
+	}
+
+	for _, row := range strings.Split(raw, "\n") {
+		if row == "" {
+			// empty string will split into slice with len == 1
+			// no need this case
+			return
+		}
+
+		splitted := strings.SplitN(row, "|", 5)
+		// allocate machine info (contains 5 parts)
+		var bits [5]string
+		// copy from slice (may be less tahn 5 parts to limited size array)
+		copy(bits[:], splitted)
 		// parse data and get machine struct
 		dm := newMachine(bits[0], bits[1], bits[2], bits[3], bits[4])
 		// register machine
 		machines = append(machines, dm)
 	}
-    return
+	return
 }

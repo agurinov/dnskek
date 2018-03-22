@@ -16,15 +16,30 @@ env:
         - GOOS=linux GOARCH=arm
         - GOOS=linux GOARCH=arm64
 
-install:
-#     - go get github.com/mattn/goveralls
-    - go get -v -d -t
-before_script:
-    - go test ./... -v -cover
-#     - goveralls -service=travis-ci
-script:
-    - go build -v -o "dnskek-${GOOS}-${GOARCH}"
-    - ls -la
+jobs:
+    include:
+        - stage: test
+          script: echo "TEST 1"
+        - stage: build
+          script: echo "BUILD"
+        - stage: deploy
+          script: echo "DEPLOY"
+
+# notifications:
+#     webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+
+
+
+#
+# install:
+# #     - go get github.com/mattn/goveralls
+#     - go get -v -d -t
+# before_script:
+#     - go test ./... -v -cover
+# #     - goveralls -service=travis-ci
+# script:
+#     - go build -v -o "dnskek-${GOOS}-${GOARCH}"
+#     - ls -la
 # deploy:
 #     provider: releases
 #     api_key: "GITHUB OAUTH TOKEN"
