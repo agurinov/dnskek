@@ -1,6 +1,6 @@
-# Setup commands for dnskek on Mac OS X
+# Setup commands for {{.appName}} on Mac OS X
 # We think this is the best option
-# But you can act on your own and setup dnskek manually
+# But you can act on your own and setup {{.appName}} manually
 
 
 # Install info
@@ -12,6 +12,7 @@
 
 
 # Phase 1. Prepare OS X launchctl agent
+
 cat > {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist <<AGENT
 {{template "agent" .}}
 AGENT
@@ -21,12 +22,13 @@ launchctl load {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist
 
 
 # Phase 2. Prepare system DNS resolver
+
 # sudo cat > /etc/resolver/{{.zone}} <<RESOLVER
 {{template "resolver" .}}
 # RESOLVER
 # sudo killall -HUP mDNSResponder
 
 
-# Run this command to install dnskek:
+# Run the commands above to install {{.appName}}:
 # TODO pass original args (--debug, --port)
 # eval "$({{executable}} install)"
