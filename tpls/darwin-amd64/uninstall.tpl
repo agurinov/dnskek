@@ -1,6 +1,6 @@
-# Uninstall commands for dnskek on Mac OS X
+# Uninstall commands for {{.appName}} on Mac OS X
 # We think this is the best option
-# But you can act on your own and uninstall dnskek manually
+# But you can act on your own and uninstall {{.appName}} manually
 
 
 # Uninstall info
@@ -15,6 +15,6 @@ rm -f {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist
 rm -rf {{user.HomeDir}}/Library/Logs/{{.appName}}
 
 
-# Run this command to uninstall dnskek:
+# Run the commands above to install {{.appName}}:
 # TODO pass original args (--debug, --port)
 # eval "$({{executable}} uninstall)"
