@@ -6,17 +6,12 @@ import (
 
 func TestFillNew(t *testing.T) {
 
+	t.Log("===========================")
 
-    t.Log("===========================")
-
-
-    reg := new(Registry)
+	reg := new(Registry)
 	// fill registry with all available docker machines
 	reg.fillNew()
 
-
-
-
-    t.Log("===========================")
+	t.Log("===========================")
 
 }

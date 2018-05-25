@@ -7,8 +7,8 @@ import (
 
 	"github.com/agurinov/dnskek/log"
 
-    "github.com/docker/machine/commands/mcndirs"
-    "github.com/docker/machine/libmachine"
+	"github.com/docker/machine/commands/mcndirs"
+	"github.com/docker/machine/libmachine"
 )
 
 const (
@@ -40,12 +40,11 @@ func NewRegistry() *Registry {
 }
 
 func (reg *Registry) fillNew() {
-    api := libmachine.NewClient(mcndirs.GetBaseDir(), mcndirs.GetMachineCertDir())
+	api := libmachine.NewClient(mcndirs.GetBaseDir(), mcndirs.GetMachineCertDir())
 
-    defer api.Close()
+	defer api.Close()
 
-
-    log.Info(api.Filestore.List())
+	log.Info(api.Filestore.List())
 }
 
 func (reg *Registry) fill() {

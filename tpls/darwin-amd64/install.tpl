@@ -9,6 +9,10 @@
 
 
 # TODO if not lookup from $PATH -> Phase 0 -> copy to path and chmod
+# Phase 0. Move to $PATH and chmod
+
+mv {{executable}} /usr/local/bin/{{.appName}}
+chmod +x /usr/local/bin/{{.appName}}
 
 
 # Phase 1. Prepare OS X launchctl agent
@@ -17,6 +21,7 @@ cat > {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist <<AGENT
 {{template "agent" .}}
 AGENT
 mkdir -p {{user.HomeDir}}/Library/Logs/{{.appName}}
+launchctl unload {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist
 launchctl load {{user.HomeDir}}/Library/LaunchAgents/{{.appName}}.plist
 # TODO check service is running
 
