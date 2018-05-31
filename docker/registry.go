@@ -72,7 +72,6 @@ func (reg *Registry) update() {
 }
 
 func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
-	log.Debug("DFGHJKLJHGFDFGHJKL")
 	// debug logging
 	defer func() {
 		// if err != nil {
@@ -87,6 +86,10 @@ func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
 	for _, dm := range reg.items {
 		// compile regexp for resolving
 		p, err := regexp.Compile("^" + subdomainsRegexExpression + dm.DnsName() + "$")
+		
+		log.Debug(p.String())
+		
+		
 		// check machine for conditions
 		switch {
 		case err != nil, !p.MatchString(name): // regex not valid or no match
