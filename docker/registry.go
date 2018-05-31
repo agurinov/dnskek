@@ -72,6 +72,7 @@ func (reg *Registry) update() {
 }
 
 func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
+	log.Debug("DFGHJKLJHGFDFGHJKL")
 	// debug logging
 	defer func() {
 		// if err != nil {
@@ -82,23 +83,30 @@ func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
 		log.Debugf("Registry.ResolveMachineByName(name=%q) -> %s", name, successLogStatus)
 	}()
 	// iterate over registry
+	log.Debug("machines", reg.items)
 	for _, dm := range reg.items {
 		// compile regexp for resolving
 		p, err := regexp.Compile("^" + subdomainsRegexExpression + dm.DnsName() + "$")
 		// check machine for conditions
 		switch {
 		case err != nil, !p.MatchString(name): // regex not valid or no match
+			log.Debug("regex not valid or no match")
 			continue
 		case !validStates[dm.State]: // machine found but not Running
+			log.Debug("err invalid state", dm.State)
 			return nil, ErrMachineNotRunning
 		case dm.IP == nil: // no IP
+			log.Debug("err no ip")
 			return nil, ErrMachineNoIP
 		case !localDrivers[dm.DriverName]: // driver not for local usage
+			log.Debug("err not local driver", dm.DriverName)
 			return nil, ErrMachineNotLocalDriver
 		default:
+			log.Debug("all wright, ip", dm.IP)
 			return dm, nil // this is valid machine
 		}
 	}
+	log.Debug("not matches!!!!")
 	// no matches -> return error
 	return nil, ErrMachineNotExist
 }
