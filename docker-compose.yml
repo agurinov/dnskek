@@ -1,42 +1,59 @@
-version: "2"
+version: "3.4"
+
+x-defaults:
+
+  working_dir: &working_dir
+    /go/src/github.com/agurinov/dnskek
+
+  volumes: &volumes
+    - src-vol:/go/src/github.com/agurinov/dnskek
+    - bin-vol:/go/bin
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /bmpci:/bmpci
+
+  logging: &logging
+    options:
+      max-size: 2m
+
+  service: &service
+    image: golang
+    volumes: *volumes
+    working_dir: *working_dir
+    logging: *logging
+
 services:
 
-    build:
-        image: golang
-        volumes:
-            - src-vol:/go/src/app
-            - src-vol:/go/bin
-        working_dir: /go/src/app
-        environment:
-            # - GOBIN=/go/src/app
-            - GOOS=darwin
-            - GOARCH=amd64
-        command: sh -c "go-wrapper download; go-wrapper install"
+  build:
+    << : *service
+    command: .scripts/build.sh
 
-    test:
-        image: golang
-        volumes:
-            - src-vol:/go/src/app
-        working_dir: /go/src/app
-        command: sh -c "go-wrapper download; go test ./... -v -cover"
+  run:
+    << : *service
+    command: .scripts/run.sh
+    ports:
+        - "8080:8080"
 
-    bench:
-        image: golang
-        volumes:
-            - src-vol:/go/src/app
-        working_dir: /go/src/app
-        command: sh -c "go-wrapper download; go test ./... -v -run=^$$ -bench=. -benchmem"
+  test:
+    << : *service
+    command: .scripts/test.sh
 
-    fmt:
-        image: golang
-        volumes:
-            - src-vol:/go/src/app
-        working_dir: /go/src/app
-        command: sh -c "go fix ./...; go vet ./...; go fmt ./..."
+  bench:
+    << : *service
+    command: .scripts/bench.sh
+
+  fmt:
+    << : *service
+    command: .scripts/fmt.sh
 
 volumes:
-    src-vol:
-        driver_opts:
-            type: none
-            device: ${PWD}
-            o: bind
+  src-vol:
+    driver_opts:
+      type: none
+      device: ${PWD}
+      o: bind
+
+  bin-vol:
+    driver_opts:
+      type: none
+      device: ${PWD}
+      o: bind

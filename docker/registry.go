@@ -82,14 +82,10 @@ func (reg *Registry) ResolveMachineByName(name string) (*Machine, error) {
 		log.Debugf("Registry.ResolveMachineByName(name=%q) -> %s", name, successLogStatus)
 	}()
 	// iterate over registry
-	log.Debug("machines", reg.items)
 	for _, dm := range reg.items {
 		// compile regexp for resolving
 		p, err := regexp.Compile("^" + subdomainsRegexExpression + dm.DnsName() + "$")
-		
-		log.Debug(p.String())
-		
-		
+
 		// check machine for conditions
 		switch {
 		case err != nil, !p.MatchString(name): // regex not valid or no match
